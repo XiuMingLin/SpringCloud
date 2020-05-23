@@ -223,3 +223,141 @@ public class OrderHandler {
 ```
 
 - 启动类
+
+```java
+package com.southwind;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class OrderApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(OrderApplication.class, args);
+    }
+}
+```
+
+#### menu 的实现
+
+- pom.xml
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        <version>2.0.2.RELEASE</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.mybatis.spring.boot</groupId>
+        <artifactId>mybatis-spring-boot-starter</artifactId>
+        <version>1.3.1</version>
+    </dependency>
+
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.11</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-config</artifactId>
+        <version>2.0.2.RELEASE</version>
+    </dependency>
+</dependencies>
+```
+
+- bootstrap.yml
+
+```yaml
+spring:
+  application:
+    name: menu
+  profiles:
+    active: dev
+  cloud:
+    config:
+      uri: http://localhost:8762
+      fail-fast: true
+```
+
+- Handler
+
+```java
+package com.southwind.controller;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/menu")
+public class MenuHandler {
+    @Value("${server.port}")
+    private String port;
+
+    @GetMapping("/index")
+    public String index(){
+        return this.port;
+    }
+}
+```
+
+- 启动类
+
+```java
+package com.southwind;
+
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+@MapperScan("com.southwind.repository")
+public class MenuApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(MenuApplication.class,args);
+    }
+}
+```
+
+- Menu实体类
+
+```java
+package com.southwind.entity;
+
+import lombok.Data;
+
+@Data
+public class Menu {
+    private long id;
+    private String name;
+    private double price;
+    private String flavor;
+}
+```
+
+- 创建MenuRepository接口
+
+```java
+package com.southwind.repository;
+
+import com.southwind.entity.Menu;
+
+import java.util.List;
+
+public interface MenuRepository {
+    public List<Menu> findAll();
+    public int count();
+    public Menu findById(long id);
+    public void save(Menu menu);
+    public void update(Menu menu);
+    public void deleteById(long id);
+}
+```
+
+- resources路径下创建mapping文件夹，存放Mapping.xml

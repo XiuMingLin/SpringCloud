@@ -9,6 +9,7 @@
         <module name="eurekaserver" />
         <module name="configserver" />
         <module name="order" />
+        <module name="menu" />
       </profile>
     </annotationProcessing>
   </component>
@@ -17,6 +18,7 @@
       <module name="aispringclouddemo" options="-parameters" />
       <module name="configserver" options="-parameters" />
       <module name="eurekaserver" options="-parameters" />
+      <module name="menu" options="-parameters" />
       <module name="order" options="-parameters" />
     </option>
   </component>
