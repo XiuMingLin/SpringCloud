@@ -145,6 +145,50 @@ spring:
 ```
 
 - 在shared路径下创建各个微服务对应的配置文件
+
+client-dev.yml
+
+```yaml
+server:
+  port: 8030
+spring:
+  application:
+    name: client
+  thymeleaf:
+    prefix: classpath:/static/
+    suffix: .html
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+```
+
+menu-dev.yml
+
+```yaml
+server:
+  port: 8020
+spring:
+  application:
+    name: menu
+  datasource:
+    name: waimai
+    url: jdbc:mysql://localhost:3306/waimai
+    username: root
+    password: root
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+mybatis:
+  mapper-locations: classpath:/mapping/*.xml
+  type-aliases-package: com.southwind.entity
+```
+
 - 启动类
 
 ```java
@@ -361,3 +405,76 @@ public interface MenuRepository {
 ```
 
 - resources路径下创建mapping文件夹，存放Mapping.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.southwind.repository.MenuRepository">
+
+    <select id="findAll" resultType="Menu">
+      select * from t_menu limit #{param1},#{param2}
+   </select>
+
+    <select id="count" resultType="int">
+      select count(id) from t_menu;
+   </select>
+
+    <insert id="save" parameterType="Menu">
+      insert into t_menu(name,price,flavor) values(#{name},#{price},#{flavor})
+   </insert>
+
+    <select id="findById" parameterType="long" resultType="Menu">
+      select * from t_menu where id = #{id}
+   </select>
+
+    <update id="update" parameterType="Menu">
+      update t_menu set name = #{name},price = #{price},flavor = #{flavor} where id = #{id}
+   </update>
+
+    <delete id="deleteById" parameterType="long">
+      delete from t_menu where id = #{id}
+   </delete>
+</mapper>
+```
+
+> 服务消费者client
+
+- pom.xml
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        <version>2.0.2.RELEASE</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        <version>2.0.2.RELEASE</version>
+    </dependency>
+
+
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-openfeign</artifactId>
+        <version>2.0.2.RELEASE</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-config</artifactId>
+        <version>2.0.2.RELEASE</version>
+    </dependency>
+    
+</dependencies>
+```
+
+- bootstrap.yml
+
