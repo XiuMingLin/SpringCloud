@@ -4,10 +4,7 @@ import com.southwind.entity.Menu;
 import com.southwind.entity.MenuVO;
 import com.southwind.entity.Type;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,4 +22,10 @@ public interface MenuFeign {
 
     @PostMapping("/menu/save")
     public void save(Menu menu);
+
+    @GetMapping("/menu/findById/{id}")
+    public Menu findById(@PathVariable("id") long id);
+
+    @PutMapping("/menu/update")
+    public void update(Menu menu);
 }
