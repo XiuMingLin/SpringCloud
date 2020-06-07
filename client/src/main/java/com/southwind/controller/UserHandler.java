@@ -43,12 +43,12 @@ public class UserHandler {
     public String save(User user){
         user.setRegisterdate(new Date());
         userFeign.save(user);
-        return "redirect:/user/redirect/user_manage";
+        return "redirect:/menu/redirect/user_manage";
     }
 
     @GetMapping("/deleteById/{id}")
     public String deleteById(@PathVariable("id") long id){
         userFeign.deleteById(id);
-        return "redirect:/user/redirect/user_manage";
+        return "redirect:/menu/redirect/user_manage";
     }
 }
